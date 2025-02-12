@@ -18,7 +18,7 @@ always @(posedge clk ) begin
     end else begin
         if(counter >= HALF_SECOND) begin
             counter <= 1'b0;
-            led <= ~led;
+            led     <= ~led;
         end else begin
             counter <= counter + 1'b1;
         end
