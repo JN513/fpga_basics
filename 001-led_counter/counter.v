@@ -2,7 +2,7 @@ module Counter #(
     parameter CLK_FREQ = 25_000_000 
 ) (
     input  wire clk,
-    input  wire rst,
+    input  wire rst_n,
     output wire [7:0] leds
 );
 
@@ -13,7 +13,7 @@ reg [32:0] counter;
 reg  [7:0] led_counter;
 
 always @(posedge clk ) begin
-    if(rst) begin
+    if(!rst_n) begin
         counter     <= 32'h0;
         led_counter <= 8'h0;
     end else begin

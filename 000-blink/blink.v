@@ -2,7 +2,7 @@ module Blink #(
     parameter CLK_FREQ = 25_000_000 
 ) (
     input wire clk,
-    input wire rst,
+    input wire rst_n,
     output reg led
 );
 
@@ -12,7 +12,7 @@ localparam HALF_SECOND = CLK_FREQ / 2;
 reg [32:0] counter;
 
 always @(posedge clk ) begin
-    if(rst) begin
+    if(!rst_n) begin
         counter <= 32'h0;
         led     <= 1'b0;
     end else begin

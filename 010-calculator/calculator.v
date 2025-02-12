@@ -1,6 +1,6 @@
 module Calculator (
     input wire clk,
-    input wire rst,
+    input wire rst_n,
 
     input wire [3:0] switchs,
 

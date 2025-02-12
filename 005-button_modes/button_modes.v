@@ -2,7 +2,7 @@ module Button_Modes #(
     parameter CLK_FREQ = 25_000_000 
 ) (
     input  wire clk,
-    input  wire rst,
+    input  wire rst_n,
     input  wire btn,
     output  reg [7:0] leds
 );
@@ -23,7 +23,7 @@ reg [31:0] counter;
 reg button_pressed;
 
 always @(posedge clk ) begin
-    if(rst) begin
+    if(!rst_n) begin
         state       <= SHIFFTER;
         leds        <= 8'h1F;
         counter     <= 32'h0;
@@ -31,9 +31,17 @@ always @(posedge clk ) begin
     end else begin
         case (state)
             SHIFFTER: begin
-                leds <= {leds[6:0], leds[7]};
-                if(btn) begin
-                    state <= COUNTER;
+                if(counter >= QUARTER_OF_A_SECOND) begin
+                    counter <= 1'b0;
+                    leds    <= {leds[6:0], leds[7]};
+                end else begin
+                    counter <= counter + 1'b1;
+                end
+
+                if(button_pressed) begin
+                    state   <= COUNTER;
+                    leds    <= 8'h00;
+                    counter <= 32'h0;
                 end
             end
             COUNTER: begin
@@ -46,17 +54,24 @@ always @(posedge clk ) begin
 
                 leds <= led_counter;
                 
-                if(btn) begin
-                    state <= FIVES;
-                    leds  <= 8'h55;
+                if(button_pressed) begin
+                    state   <= FIVES;
+                    leds    <= 8'h55;
+                    counter <= 32'h0;
                 end
             end
             FIVES: begin
-                leds <= {leds[6:0], leds[7]};
+                if(counter >= QUARTER_OF_A_SECOND) begin
+                    counter <= 1'b0;
+                    leds    <= {leds[6:0], leds[7]};
+                end else begin
+                    counter <= counter + 1'b1;
+                end
 
-                if(btn) begin
-                    state <= BLINK;
-                    leds  <= 8'hFF;
+                if(button_pressed) begin
+                    state   <= BLINK;
+                    leds    <= 8'hFF;
+                    counter <= 32'h0;
                 end
             end
 
@@ -68,9 +83,10 @@ always @(posedge clk ) begin
                     counter <= counter + 1'b1;
                 end
 
-                if(btn) begin
-                    state <= INVERSE_COUNTER;
-                    leds  <= 8'hFF;
+                if(button_pressed) begin
+                    state   <= INVERSE_COUNTER;
+                    leds    <= 8'hFF;
+                    counter <= 32'h0;
                 end
             end
 
@@ -84,15 +100,17 @@ always @(posedge clk ) begin
 
                 leds <= led_counter;
 
-                if(btn) begin
-                    state <= SHIFFTER;
-                    leds  <= 8'h1F;
+                if(button_pressed) begin
+                    state   <= SHIFFTER;
+                    leds    <= 8'h1F;
+                    counter <= 32'h0;
                 end
             end
 
             default: begin
-                state <= SHIFFTER;
-                leds  <= 8'h1F;
+                state   <= SHIFFTER;
+                leds    <= 8'h1F;
+                counter <= 32'h0;
             end
         endcase
     end
@@ -105,7 +123,7 @@ always @(posedge clk ) begin
     button_pressed <= btn;
     btn_reg        <= btn;
 
-    if(reset) begin
+    if(!rst_n) begin
         debouncing_counter <= 21'h0;
     end else begin
         if(btn_reg) begin
@@ -114,7 +132,7 @@ always @(posedge clk ) begin
             debouncing_counter <= 21'h0;
         end
 
-        if(debouncing_counter >= QUARTER_OF_A_SECOND) begin
+        if(debouncing_counter >= HALF_SECOND) begin
             debouncing_counter <= 21'h0;
             button_pressed     <= 1'b1;
         end
