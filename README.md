@@ -11,5 +11,6 @@
 6 - semaphore
 7 - 7 segment
 8 - 7 segment semaphore
-9 - sum
-10 - calculator
+9 - simple clock
+10 - sum
+11 - calculator
