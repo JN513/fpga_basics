@@ -116,7 +116,7 @@ always @(posedge clk ) begin
     end
 end
 
-reg [20:0] debouncing_counter;
+reg [28:0] debouncing_counter;
 reg btn_reg;
 
 always @(posedge clk ) begin

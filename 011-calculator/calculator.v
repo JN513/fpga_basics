@@ -13,11 +13,11 @@ module Calculator (
     
 
 ALU alu (
-    .opcode(switchs),
-    .A(A),
-    .B(B),
-    .S(S),
-    .zero(zero)
+    .opcode (switchs),
+    .A      (A),
+    .B      (B),
+    .S      (S),
+    .zero   (zero)
 );
 
 

@@ -3,22 +3,45 @@ module top #(
 ) (
     input wire clk,
 
-    input wire CPU_RESETN,
+    input wire CPU_RESETN, // reset
 
+    // BTNs
     input wire BTNC,
     input wire BTNU,
     input wire BTNL,
     input wire BTNR,
     input wire BTND,
     
+    // SWs and LEDs
     input  wire [15:0] SW,
     output wire [15:0] LED,
 
+    // UART
     input  wire uart_tx,
-    output wire uart_rx
+    output wire uart_rx,
+
+    // 7-segment display
+    output wire CA,
+    output wire CB,
+    output wire CC,
+    output wire CD,
+    output wire CE,
+    output wire CF,
+    output wire CG,
+    output wire DP,
+
+    output wire [7:0] AN, // 7-segment display anodes
+
+    // VGA
+    output wire [3:0] VGA_R,
+    output wire [3:0] VGA_G,
+    output wire [3:0] VGA_B,
+    output wire VGA_HS,
+    output wire VGA_VS
+
 );
 
-`define BUTTON_MODES
+`define CLOCK
 
 `ifdef BLINKY // 001-blinky
 
@@ -93,6 +116,27 @@ Button_Modes #(
 );
 
 assign LED = {8'h00, leds_temp};
+
+`elsif CLOCK
+
+Clock #(
+    .CLK_FREQ(CLK_FREQ)
+) clock (
+    .clk  (clk),
+    .rst_n(CPU_RESETN),
+    .BTNC (BTNC),
+    .BTNU (BTNU),
+    .BTND (BTND),
+    .CA   (CA),
+    .CB   (CB),
+    .CC   (CC),
+    .CD   (CD),
+    .CE   (CE),
+    .CF   (CF),
+    .CG   (CG),
+    .DP   (DP),
+    .AN   (AN)
+);
 
 `endif
     
