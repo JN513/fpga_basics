@@ -1,6 +1,6 @@
 # Verilog Basics
 
-Basic demo circuits made in Verilog HDL
+Basic FPGA demo circuits made in Verilog HDL, VHDL and SystemVerilog
 
 # Roadmap
 
