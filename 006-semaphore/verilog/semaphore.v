@@ -46,7 +46,7 @@ always @(posedge clk ) begin
                 state <= OPEN;
             end
             OPEN: begin
-                if(time_counter == CLOSING_TIME) begin
+                if(time_counter == CLOSING_TIME || pedestrian) begin
                     state        <= CLOSING;
                     time_counter <= 32'h0;
                 end else begin

@@ -13,7 +13,7 @@ module Calculator (
     
 
 ALU alu (
-    .opcode (switchs),
+    .opcode (switchs[2:0]),
     .A      (A),
     .B      (B),
     .S      (S),
